@@ -20,6 +20,7 @@
         "url": "https://github.com/plagtech/vendure-spraay-plugin/issues"
     },
     "homepage": "https://github.com/plagtech/vendure-spraay-plugin#readme",
+    "private": true,
     "keywords": [
         "vendure",
         "vendure-plugin",
@@ -31,7 +32,7 @@
         "batch-payments",
         "x402"
     ],
-    "private": true,
+    
     "engines": {
         "node": ">=20"
     },
