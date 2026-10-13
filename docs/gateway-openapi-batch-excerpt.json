@@ -1,0 +1,316 @@
+{
+  "source": "https://gateway.spraay.app/openapi.json",
+  "retrieved": "2026-10-13",
+  "info": {
+    "title": "Spraay x402 Gateway",
+    "version": "3.8.3"
+  },
+  "servers": [
+    {
+      "url": "https://gateway.spraay.app",
+      "description": "Production (Base mainnet)"
+    }
+  ],
+  "paths": {
+    "/api/v1/batch/execute": {
+      "post": {
+        "operationId": "batch-execute",
+        "summary": "Batch USDC payments on Base or peaq (amounts[] in RAW base units) — $0.02",
+        "tags": [
+          "payments"
+        ],
+        "description": "Paid endpoint — $0.02 per call via x402/MPP. See https://gateway.spraay.app/.well-known/x402.json for full payment details.",
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "amount": "0.020000",
+            "currency": "USD"
+          },
+          "protocols": [
+            {
+              "mpp": {}
+            },
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "contract": {
+                      "type": "string",
+                      "description": "Spraay contract the transaction targets."
+                    },
+                    "token": {
+                      "type": "object",
+                      "properties": {
+                        "symbol": {
+                          "type": "string"
+                        },
+                        "address": {
+                          "type": "string"
+                        },
+                        "decimals": {
+                          "type": "number"
+                        },
+                        "isETH": {
+                          "type": "boolean"
+                        }
+                      }
+                    },
+                    "batch": {
+                      "type": "object",
+                      "description": "Human-readable summary. Every amount here is a HUMAN-DECIMAL string, not base units.",
+                      "properties": {
+                        "recipientCount": {
+                          "type": "number"
+                        },
+                        "totalAmount": {
+                          "type": "string",
+                          "description": "Human decimal, e.g. \"1.5\"."
+                        },
+                        "fee": {
+                          "type": "string",
+                          "description": "Human decimal. 0.3% protocol fee."
+                        },
+                        "feePercent": {
+                          "type": "string"
+                        },
+                        "totalWithFee": {
+                          "type": "string",
+                          "description": "Human decimal. totalAmount + fee."
+                        }
+                      }
+                    },
+                    "transaction": {
+                      "type": "object",
+                      "description": "Unsigned transaction to sign and broadcast.",
+                      "properties": {
+                        "to": {
+                          "type": "string"
+                        },
+                        "data": {
+                          "type": "string",
+                          "description": "Hex calldata."
+                        },
+                        "value": {
+                          "type": "string",
+                          "description": "RAW wei as a decimal string. \"0\" for ERC-20 batches."
+                        },
+                        "chainId": {
+                          "type": "number"
+                        },
+                        "gasLimit": {
+                          "type": "string",
+                          "description": "HEX quantity, e.g. \"0x38270\"."
+                        }
+                      }
+                    },
+                    "approvalRequired": {
+                      "type": "object",
+                      "description": "ERC-20 batches only; absent for native ETH. Approve before broadcasting the transaction.",
+                      "properties": {
+                        "token": {
+                          "type": "string"
+                        },
+                        "spender": {
+                          "type": "string"
+                        },
+                        "amount": {
+                          "type": "string",
+                          "description": "RAW base units. Pass this value verbatim as the approve() allowance."
+                        },
+                        "amountFormatted": {
+                          "type": "string",
+                          "description": "The same allowance as a human decimal, for display only."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "description": "Symbol (Base: USDC, USDT, EURC, DAI, WETH, or ETH for native; peaq: USDC), an ERC-20 address on the chosen chain, or ETH for native. Defaults to USDC."
+                  },
+                  "recipients": {
+                    "type": "array",
+                    "description": "Recipient addresses, parallel to amounts[]. Max 200."
+                  },
+                  "amounts": {
+                    "type": "array",
+                    "description": "RAW base units as integer strings, parallel to recipients[]. NOT human decimals: USDC has 6 decimals, so \"1500000\" = $1.50."
+                  },
+                  "sender": {
+                    "type": "string",
+                    "description": "Payer address. Used to estimate gas against real allowance state."
+                  },
+                  "chain": {
+                    "type": "string",
+                    "description": "Settlement chain: \"base\" (default) or \"peaq\". Any other value is rejected — a chain is settleable only once its contract bytecode has been verified byte-identical to Base. Omitting this field behaves exactly as before peaq was added."
+                  }
+                },
+                "required": [
+                  "token",
+                  "recipients",
+                  "amounts",
+                  "sender"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/batch/estimate": {
+      "post": {
+        "operationId": "batch-estimate",
+        "summary": "Estimate batch gas and fee (amounts[] in RAW base units) — $0.001",
+        "tags": [
+          "payments"
+        ],
+        "description": "Paid endpoint — $0.001 per call via x402/MPP. See https://gateway.spraay.app/.well-known/x402.json for full payment details.",
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "amount": "0.001000",
+            "currency": "USD"
+          },
+          "protocols": [
+            {
+              "mpp": {}
+            },
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "token": {
+                      "type": "object",
+                      "properties": {
+                        "symbol": {
+                          "type": "string"
+                        },
+                        "address": {
+                          "type": "string"
+                        },
+                        "decimals": {
+                          "type": "number"
+                        },
+                        "isETH": {
+                          "type": "boolean"
+                        }
+                      }
+                    },
+                    "recipientCount": {
+                      "type": "number"
+                    },
+                    "totalAmount": {
+                      "type": "string",
+                      "description": "Detailed form only. HUMAN-DECIMAL string."
+                    },
+                    "fee": {
+                      "type": "string",
+                      "description": "Detailed form only. HUMAN-DECIMAL string. 0.3% protocol fee."
+                    },
+                    "feePercent": {
+                      "type": "string"
+                    },
+                    "totalWithFee": {
+                      "type": "string",
+                      "description": "Detailed form only. HUMAN-DECIMAL string."
+                    },
+                    "suggestedGasLimit": {
+                      "type": "string",
+                      "description": "DECIMAL string — note this differs from batch/execute's transaction.gasLimit, which is hex."
+                    },
+                    "estimatedGas": {
+                      "type": "string",
+                      "description": "Count-only form. DECIMAL string, cold-recipient worst case."
+                    },
+                    "note": {
+                      "type": "string",
+                      "description": "Count-only form. Explains that the figure is a conservative ceiling."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "description": "Same token input as batch/execute. Defaults to USDC."
+                  },
+                  "recipients": {
+                    "type": "array",
+                    "description": "Detailed form: recipient addresses, parallel to amounts[]. Omit for the count-only form."
+                  },
+                  "amounts": {
+                    "type": "array",
+                    "description": "RAW base units as integer strings, parallel to recipients[] — identical semantics to batch/execute. USDC 6dp: \"1500000\" = $1.50."
+                  },
+                  "sender": {
+                    "type": "string",
+                    "description": "Optional payer address, used to sharpen the gas estimate."
+                  },
+                  "recipientCount": {
+                    "type": "number",
+                    "description": "Count-only form: number of recipients, when exact amounts are not known yet. Returns a worst-case gas ceiling and no totals."
+                  },
+                  "chain": {
+                    "type": "string",
+                    "description": "Settlement chain: \"base\" (default) or \"peaq\". Same allowlist batch/execute enforces, so a quote can never be produced for a chain execute would refuse."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

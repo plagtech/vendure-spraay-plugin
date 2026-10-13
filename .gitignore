@@ -1,0 +1,9 @@
+node_modules/
+lib/
+__data__/
+demo/__data__/
+e2e/__data__/
+*.log
+.env
+coverage/
+.vendure/

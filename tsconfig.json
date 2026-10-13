@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es2022",
+        "lib": ["es2022", "dom"],
+        "strict": true,
+        "strictPropertyInitialization": false,
+        "esModuleInterop": true,
+        "experimentalDecorators": true,
+        "useDefineForClassFields": false,
+        "emitDecoratorMetadata": true,
+        "declaration": true,
+        "sourceMap": true,
+        "skipLibCheck": true,
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "forceConsistentCasingInFileNames": true
+    },
+    "include": ["src/**/*.ts", "test/**/*.ts", "e2e/**/*.ts", "demo/**/*.ts"]
+}

@@ -1,0 +1,65 @@
+{
+    "name": "@plagtech/vendure-spraay-plugin",
+    "version": "0.1.0",
+    "description": "Admin-approved, noncustodial USDC batch payouts to sellers on Base for Vendure, powered by the Spraay batch contract and gateway.",
+    "license": "MIT",
+    "author": "Plagtech <mngoswp@gmail.com>",
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "files": [
+        "lib/**/*",
+        "README.md",
+        "CHANGELOG.md",
+        "LICENSE"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/plagtech/vendure-spraay-plugin.git"
+    },
+    "bugs": {
+        "url": "https://github.com/plagtech/vendure-spraay-plugin/issues"
+    },
+    "homepage": "https://github.com/plagtech/vendure-spraay-plugin#readme",
+    "keywords": [
+        "vendure",
+        "vendure-plugin",
+        "spraay",
+        "usdc",
+        "base",
+        "payouts",
+        "marketplace",
+        "batch-payments",
+        "x402"
+    ],
+    "private": true,
+    "engines": {
+        "node": ">=20"
+    },
+    "scripts": {
+        "build": "rimraf lib && tsc -p ./tsconfig.build.json",
+        "typecheck": "tsc -p ./tsconfig.json --noEmit",
+        "test": "vitest --run --config vitest.config.mts",
+        "e2e": "vitest --run --config vitest.e2e.config.mts",
+        "demo": "ts-node --transpile-only --project tsconfig.json demo/run-demo.ts"
+    },
+    "peerDependencies": {
+        "@vendure/common": "^3.6.0-0",
+        "@vendure/core": "^3.6.0-0"
+    },
+    "dependencies": {
+        "viem": "^2.57.5"
+    },
+    "devDependencies": {
+        "@swc/core": "^1.16.18",
+        "@types/node": "^20.19.43",
+        "@vendure/common": "^3.6.5",
+        "@vendure/core": "^3.6.5",
+        "@vendure/testing": "^3.6.5",
+        "rimraf": "^5.0.10",
+        "sql.js": "^1.14.2",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.8.2",
+        "unplugin-swc": "^2.0.0",
+        "vitest": "^3.2.7"
+    }
+}
