@@ -6,6 +6,11 @@ import { SPRAAY_BATCH_CONTRACT_BASE, USDC_BASE } from '../constants';
 import { erc20Abi, spraayBatchAbi } from './abi';
 import { decodeSprayTokenCalldata, diffSprayTokenCalldata, ExpectedTransfer } from './calldata';
 
+/**
+ * A single log entry from a transaction receipt.
+ *
+ * @category Services
+ */
 export interface ChainLog {
     address: string;
     topics: readonly string[];
@@ -13,6 +18,11 @@ export interface ChainLog {
     logIndex?: number | null;
 }
 
+/**
+ * Minimal transaction fields needed by settlement verification.
+ *
+ * @category Services
+ */
 export interface ChainTransaction {
     hash: string;
     from: string;
@@ -24,6 +34,11 @@ export interface ChainTransaction {
     blockNumber?: bigint | null;
 }
 
+/**
+ * Minimal receipt fields needed by settlement verification.
+ *
+ * @category Services
+ */
 export interface ChainReceipt {
     transactionHash: string;
     status: 'success' | 'reverted';
@@ -33,6 +48,11 @@ export interface ChainReceipt {
     logs: readonly ChainLog[];
 }
 
+/**
+ * Result of {@link verifySettlement}: either a confirmed settlement or a mismatch/revert.
+ *
+ * @category Services
+ */
 export type SettlementVerification =
     | { ok: true; feeAmount: bigint; blockNumber: bigint }
     | { ok: false; kind: 'reverted' | 'mismatch'; problems: string[] };
@@ -49,6 +69,8 @@ interface DecodedTransfer {
  *  2. the contract's SprayTokenExecuted event,
  *  3. every USDC Transfer log in the receipt (pull from sender, one push per recipient, fee).
  * All three must agree with the approved batch before it is treated as settled.
+ *
+ * @category Services
  */
 export function verifySettlement(input: {
     tx: ChainTransaction;

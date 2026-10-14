@@ -15,6 +15,8 @@ export interface SprayEventRef {
  * Read-only access to Base. The plugin never holds a key: the only write it can perform is
  * relaying a transaction the merchant already signed (`sendRawTransaction`).
  * Implementations must be safe to call repeatedly (reconciliation is idempotent).
+ *
+ * @category Services
  */
 export interface SpraayChainReader {
     getChainId(): Promise<number>;
@@ -41,6 +43,11 @@ export interface SpraayChainReader {
     findSprayTokenExecutions(sender: string, fromBlock: bigint, toBlock: bigint): Promise<SprayEventRef[]>;
 }
 
+/**
+ * Default {@link SpraayChainReader} implementation backed by a viem `PublicClient`.
+ *
+ * @category Services
+ */
 export class ViemChainReader implements SpraayChainReader {
     private readonly client: PublicClient;
 

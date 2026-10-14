@@ -1,6 +1,11 @@
 import { SpraayChainReader } from './chain/chain-reader';
 import { FetchLike } from './gateway/spraay-gateway.client';
 
+/**
+ * Configuration options for the {@link SpraayPayoutPlugin}.
+ *
+ * @category Plugin options
+ */
 export interface SpraayPayoutPluginOptions {
     /**
      * JSON-RPC endpoint for Base mainnet (chain id 8453). Used for reads, simulation,

@@ -10,6 +10,8 @@ import {
  * Request/response shapes for the two Spraay gateway endpoints this plugin uses, transcribed
  * from the published OpenAPI document (https://gateway.spraay.app/openapi.json, info.version 3.8.3).
  * Only fields documented there are read.
+ *
+ * @category Services
  */
 export interface GatewayBatchRequest {
     /** Symbol or ERC-20 address. The plugin always sends "USDC". */
@@ -108,6 +110,11 @@ export interface SpraayGatewayClientOptions {
     headers?: Record<string, string>;
 }
 
+/**
+ * HTTP client for the Spraay gateway's batch endpoints.
+ *
+ * @category Services
+ */
 export class SpraayGatewayClient {
     private readonly baseUrl: string;
     private readonly fetchFn: FetchLike;

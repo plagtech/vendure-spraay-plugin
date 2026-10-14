@@ -1,4 +1,6 @@
+/** @internal */
 export const loggerCtx = 'SpraayPayoutPlugin';
+/** @internal */
 export const SPRAAY_PLUGIN_OPTIONS = Symbol('SPRAAY_PLUGIN_OPTIONS');
 
 /**

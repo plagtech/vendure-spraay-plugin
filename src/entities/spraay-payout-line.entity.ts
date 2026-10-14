@@ -1,6 +1,11 @@
 import { DeepPartial, EntityId, ID, Seller, VendureEntity } from '@vendure/core';
 import { Column, Entity, Index, ManyToOne } from 'typeorm';
 
+/**
+ * Lifecycle states of a {@link SpraayPayoutLine}.
+ *
+ * @category Entities
+ */
 export enum SpraayPayoutLineState {
     /** Owed to the seller, not yet in a batch. */
     PENDING = 'PENDING',
@@ -15,6 +20,8 @@ export enum SpraayPayoutLineState {
 /**
  * One amount owed to one seller. The unique `idempotencyKey` is the first line of defence
  * against double payment: the same obligation can never be recorded twice.
+ *
+ * @category Entities
  */
 @Entity('spraay_payout_line')
 export class SpraayPayoutLine extends VendureEntity {

@@ -5,6 +5,11 @@ import { USDC_DECIMALS } from './constants';
 const RAW_INTEGER = /^(0|[1-9][0-9]*)$/;
 const UINT256_MAX = (1n << 256n) - 1n;
 
+/**
+ * Thrown when a payout amount or address fails validation.
+ *
+ * @category Services
+ */
 export class SpraayValidationError extends Error {
     constructor(message: string) {
         super(message);
@@ -16,6 +21,8 @@ export class SpraayValidationError extends Error {
  * Parses a raw base-unit amount (USDC has 6 decimals, so "1500000" = 1.50 USDC).
  * Only canonical, positive integer strings are accepted: no decimals, no exponent,
  * no leading zeros, no signs, no whitespace. This keeps amounts exact end to end.
+ *
+ * @category Services
  */
 export function parseRawAmount(value: string, label = 'amount'): bigint {
     if (typeof value !== 'string' || !RAW_INTEGER.test(value)) {
@@ -33,12 +40,20 @@ export function parseRawAmount(value: string, label = 'amount'): bigint {
     return parsed;
 }
 
-/** Mirrors SprayContract: `feeAmount = (totalAmount * feeBps) / 10000` (integer division). */
+/**
+ * Mirrors SprayContract: `feeAmount = (totalAmount * feeBps) / 10000` (integer division).
+ *
+ * @category Services
+ */
 export function computeProtocolFee(totalRaw: bigint, feeBps: bigint): bigint {
     return (totalRaw * feeBps) / 10_000n;
 }
 
-/** Display-only helper. Never used for arithmetic. */
+/**
+ * Display-only helper. Never used for arithmetic.
+ *
+ * @category Services
+ */
 export function formatUsdc(raw: bigint): string {
     const negative = raw < 0n;
     const abs = negative ? -raw : raw;
@@ -48,7 +63,11 @@ export function formatUsdc(raw: bigint): string {
     return `${negative ? '-' : ''}${whole.toString()}${fraction ? '.' + fraction : ''}`;
 }
 
-/** Returns the EIP-55 checksummed address or throws. Rejects the zero address (the contract would revert). */
+/**
+ * Returns the EIP-55 checksummed address or throws. Rejects the zero address (the contract would revert).
+ *
+ * @category Services
+ */
 export function normalizeAddress(value: string, label = 'address'): `0x${string}` {
     if (typeof value !== 'string' || !isAddress(value, { strict: false })) {
         throw new SpraayValidationError(`${label} is not a valid EVM address: "${String(value)}"`);
@@ -60,6 +79,11 @@ export function normalizeAddress(value: string, label = 'address'): `0x${string}
     return checksummed;
 }
 
+/**
+ * Case-insensitive EVM address comparison.
+ *
+ * @category Services
+ */
 export function sameAddress(a: string | null | undefined, b: string | null | undefined): boolean {
     return !!a && !!b && a.toLowerCase() === b.toLowerCase();
 }

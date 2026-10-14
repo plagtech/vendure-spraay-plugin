@@ -1,6 +1,11 @@
 import { DeepPartial, EntityId, ID, VendureEntity } from '@vendure/core';
 import { Column, Entity, Index, ManyToOne, OneToMany } from 'typeorm';
 
+/**
+ * Lifecycle states of a {@link SpraayPayoutBatch}.
+ *
+ * @category Entities
+ */
 export enum SpraayPayoutBatchState {
     /** Created from pending lines; content may still be reviewed. */
     DRAFT = 'DRAFT',
@@ -22,6 +27,11 @@ export enum SpraayPayoutBatchState {
     CANCELLED = 'CANCELLED',
 }
 
+/**
+ * A batch of payout lines grouped for on-chain settlement.
+ *
+ * @category Entities
+ */
 @Entity('spraay_payout_batch')
 export class SpraayPayoutBatch extends VendureEntity {
     constructor(input?: DeepPartial<SpraayPayoutBatch>) {
@@ -99,7 +109,11 @@ export class SpraayPayoutBatch extends VendureEntity {
     attempts: SpraayPayoutAttempt[];
 }
 
-/** One on-chain transfer: the aggregate of every line in the batch paid to the same address. */
+/**
+ * One on-chain transfer: the aggregate of every line in the batch paid to the same address.
+ *
+ * @category Entities
+ */
 @Entity('spraay_payout_batch_item')
 export class SpraayPayoutBatchItem extends VendureEntity {
     constructor(input?: DeepPartial<SpraayPayoutBatchItem>) {
@@ -128,6 +142,11 @@ export class SpraayPayoutBatchItem extends VendureEntity {
     sellerIds: string[];
 }
 
+/**
+ * Lifecycle states of a {@link SpraayPayoutAttempt}.
+ *
+ * @category Entities
+ */
 export enum SpraayPayoutAttemptState {
     /** Signing request issued; nothing known on-chain yet. */
     PREPARED = 'PREPARED',
@@ -146,6 +165,8 @@ export enum SpraayPayoutAttemptState {
 /**
  * One try at getting a batch on-chain. A batch has at most one live (PREPARED/SUBMITTED) attempt;
  * a new one can only be created after the previous one is provably dead or reverted.
+ *
+ * @category Entities
  */
 @Entity('spraay_payout_attempt')
 export class SpraayPayoutAttempt extends VendureEntity {
@@ -210,6 +231,11 @@ export class SpraayPayoutAttempt extends VendureEntity {
     note: string | null;
 }
 
+/**
+ * Immutable audit log entry for batch lifecycle events.
+ *
+ * @category Entities
+ */
 @Entity('spraay_payout_audit_entry')
 export class SpraayPayoutAuditEntry extends VendureEntity {
     constructor(input?: DeepPartial<SpraayPayoutAuditEntry>) {
@@ -233,6 +259,8 @@ export class SpraayPayoutAuditEntry extends VendureEntity {
 /**
  * At most one batch per sender may hold a pinned nonce at a time. The unique index makes this
  * an atomic database-level guarantee rather than a read-then-write check.
+ *
+ * @category Entities
  */
 @Entity('spraay_sender_lock')
 export class SpraaySenderLock extends VendureEntity {

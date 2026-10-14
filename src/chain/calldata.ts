@@ -5,17 +5,31 @@ import { USDC_BASE } from '../constants';
 
 import { erc20Abi, spraayBatchAbi } from './abi';
 
+/**
+ * A recipient–amount pair expected in the on-chain calldata.
+ *
+ * @category Services
+ */
 export interface ExpectedTransfer {
     recipient: string;
     amount: bigint;
 }
 
+/**
+ * Decoded result of a `sprayToken` function call.
+ *
+ * @category Services
+ */
 export interface DecodedSprayToken {
     token: `0x${string}`;
     recipients: Array<{ recipient: `0x${string}`; amount: bigint }>;
 }
 
-/** Decodes `sprayToken(address,(address,uint256)[])` calldata. Returns null for anything else. */
+/**
+ * Decodes `sprayToken(address,(address,uint256)[])` calldata. Returns null for anything else.
+ *
+ * @category Services
+ */
 export function decodeSprayTokenCalldata(data: string | undefined | null): DecodedSprayToken | null {
     if (!data || !/^0x[0-9a-fA-F]*$/.test(data)) {
         return null;
@@ -38,6 +52,8 @@ export function decodeSprayTokenCalldata(data: string | undefined | null): Decod
 /**
  * Lists every difference between decoded calldata and the planned transfers. Order matters:
  * the plugin always submits items in its deterministic order, so a reordering is a mismatch too.
+ *
+ * @category Services
  */
 export function diffSprayTokenCalldata(decoded: DecodedSprayToken | null, expected: ExpectedTransfer[]): string[] {
     if (!decoded) {
@@ -63,6 +79,11 @@ export function diffSprayTokenCalldata(decoded: DecodedSprayToken | null, expect
     return problems;
 }
 
+/**
+ * Encodes the `sprayToken` calldata from the planned transfers.
+ *
+ * @category Services
+ */
 export function encodeSprayTokenCalldata(expected: ExpectedTransfer[]): Hex {
     return encodeFunctionData({
         abi: spraayBatchAbi,
@@ -71,6 +92,11 @@ export function encodeSprayTokenCalldata(expected: ExpectedTransfer[]): Hex {
     });
 }
 
+/**
+ * Encodes an ERC-20 `approve` calldata for the given spender and amount.
+ *
+ * @category Services
+ */
 export function encodeApproveCalldata(spender: string, amount: bigint): Hex {
     return encodeFunctionData({ abi: erc20Abi, functionName: 'approve', args: [spender as `0x${string}`, amount] });
 }

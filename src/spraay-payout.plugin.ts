@@ -27,6 +27,7 @@ import { SpraayPayoutPluginOptions } from './types';
 
 /**
  * @description
+ * @category Plugin
  * Admin-approved, noncustodial USDC batch payouts to marketplace sellers on Base, using the
  * Spraay batch contract (0x1646452F98E36A3c9Cfc3eDD8868221E207B5eEC) and the Spraay gateway's
  * `POST /api/v1/batch/execute` and `POST /api/v1/batch/estimate` endpoints.

@@ -3,6 +3,11 @@ import { Hex, keccak256, parseTransaction, recoverTransactionAddress, Transactio
 import { sameAddress } from '../amounts';
 import { BASE_CHAIN_ID } from '../constants';
 
+/**
+ * The exact transaction the merchant's wallet must sign.
+ *
+ * @category Services
+ */
 export interface SigningRequest {
     from: string;
     to: string;
@@ -13,6 +18,11 @@ export interface SigningRequest {
     gas: string;
 }
 
+/**
+ * Result of parsing and verifying a signed transaction.
+ *
+ * @category Services
+ */
 export interface InspectedSignedTransaction {
     hash: `0x${string}`;
     from: `0x${string}`;
@@ -23,6 +33,8 @@ export interface InspectedSignedTransaction {
  * Parses a merchant-signed raw transaction and proves it is exactly the transaction the plugin
  * asked to be signed (same signer, target, calldata, value, chain and nonce) before it is
  * recorded or broadcast. Returns the transaction hash computed locally from the raw bytes.
+ *
+ * @category Services
  */
 export async function inspectSignedTransaction(
     raw: string,

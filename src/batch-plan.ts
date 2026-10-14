@@ -3,6 +3,11 @@ import { keccak256, toHex } from 'viem';
 import { normalizeAddress, SpraayValidationError } from './amounts';
 import { BASE_CHAIN_ID, MAX_RECIPIENTS_PER_BATCH, SPRAAY_BATCH_CONTRACT_BASE, USDC_BASE } from './constants';
 
+/**
+ * A payout line ready to be planned into a batch.
+ *
+ * @category Services
+ */
 export interface PlannableLine {
     id: string;
     sellerId: string;
@@ -10,6 +15,11 @@ export interface PlannableLine {
     amount: bigint;
 }
 
+/**
+ * One aggregated transfer produced by {@link planBatch}.
+ *
+ * @category Services
+ */
 export interface PlannedItem {
     /** EIP-55 checksummed recipient address. */
     recipient: `0x${string}`;
@@ -19,6 +29,11 @@ export interface PlannedItem {
     sellerIds: string[];
 }
 
+/**
+ * The output of {@link planBatch}: items, total and a content hash for approval.
+ *
+ * @category Services
+ */
 export interface BatchPlan {
     items: PlannedItem[];
     totalAmount: bigint;
@@ -32,6 +47,8 @@ export interface BatchPlan {
  * Transfer log unambiguous during settlement verification and saves gas. Items are
  * ordered deterministically by lower-cased address so the same set of lines always
  * produces the same calldata and the same content hash.
+ *
+ * @category Services
  */
 export function planBatch(lines: PlannableLine[]): BatchPlan {
     if (lines.length === 0) {
@@ -80,6 +97,8 @@ export function planBatch(lines: PlannableLine[]): BatchPlan {
 /**
  * The hash an approver signs off on. It commits to the chain, contract, token and the
  * exact ordered (recipient, amount) pairs, so any change after review invalidates approval.
+ *
+ * @category Services
  */
 export function computeContentHash(items: Array<{ recipient: string; amount: bigint }>): `0x${string}` {
     const canonical = [

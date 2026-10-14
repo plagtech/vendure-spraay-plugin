@@ -4,6 +4,8 @@
  *
  * The function signatures match the calldata the Spraay gateway encodes in
  * POST /api/v1/batch/execute (`sprayToken(address,(address,uint256)[])`).
+ *
+ * @internal
  */
 export const spraayBatchAbi = [
     {
@@ -79,6 +81,7 @@ export const spraayBatchAbi = [
     },
 ] as const;
 
+/** @internal */
 export const erc20Abi = [
     {
         type: 'function',

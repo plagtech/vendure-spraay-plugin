@@ -42,6 +42,11 @@ import { SpraayGatewayClient } from '../gateway/spraay-gateway.client';
 import { verifyExecuteResponse } from '../gateway/verify-gateway-response';
 import { SpraayPayoutPluginOptions } from '../types';
 
+/**
+ * Input for recording a new payout obligation.
+ *
+ * @category Services
+ */
 export interface CreatePayoutLineInput {
     sellerId: ID;
     amount: string;
@@ -50,6 +55,11 @@ export interface CreatePayoutLineInput {
     memo?: string | null;
 }
 
+/**
+ * EIP-1559-style unsigned transaction fields returned in a signing request.
+ *
+ * @category Services
+ */
 export interface TransactionRequest {
     from: string;
     to: string;
@@ -79,6 +89,7 @@ const CANCELLABLE_BATCH_STATES = [
     SpraayPayoutBatchState.FAILED,
 ];
 
+/** @internal */
 export const SELLER_PAYOUT_ADDRESS_FIELD = 'spraayPayoutAddress';
 
 /**
@@ -88,6 +99,8 @@ export const SELLER_PAYOUT_ADDRESS_FIELD = 'spraayPayoutAddress';
  * administrator approves a batch and the merchant's own wallet signs the exact transaction
  * the plugin verified. Every state change is a compare-and-set on the current state, so
  * concurrent requests (two admins, the scheduler and an admin) cannot double-advance a batch.
+ *
+ * @category Services
  */
 @Injectable()
 export class SpraayPayoutService implements OnApplicationBootstrap {

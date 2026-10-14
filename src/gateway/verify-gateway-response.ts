@@ -4,9 +4,14 @@ import { BASE_CHAIN_ID, MAX_RECIPIENTS_PER_BATCH, SPRAAY_BATCH_CONTRACT_BASE, US
 
 import { GatewayExecuteResponse } from './spraay-gateway.client';
 
-/** Upper bound for a sane gas limit: 200 cold ERC-20 transfers stay far below this. */
+/** @internal */
 const MAX_REASONABLE_GAS_LIMIT = 15_000_000n;
 
+/**
+ * The verified fields extracted from a gateway execute response.
+ *
+ * @category Services
+ */
 export interface VerifiedExecuteResponse {
     calldata: `0x${string}`;
     gatewayGasLimit: bigint;
@@ -15,6 +20,11 @@ export interface VerifiedExecuteResponse {
     fee: bigint;
 }
 
+/**
+ * Thrown when the gateway's unsigned transaction does not match the approved batch.
+ *
+ * @category Services
+ */
 export class GatewayResponseMismatchError extends Error {
     constructor(readonly problems: string[]) {
         super(`Refusing Spraay gateway response: ${problems.join('; ')}`);
@@ -26,6 +36,8 @@ export class GatewayResponseMismatchError extends Error {
  * The gateway is not trusted blindly. Its unsigned transaction is decoded and compared,
  * field by field, with the batch the admin approved and with the fee rate read from the
  * contract itself. Any difference aborts before a signing request is ever produced.
+ *
+ * @category Services
  */
 export function verifyExecuteResponse(
     response: GatewayExecuteResponse,
